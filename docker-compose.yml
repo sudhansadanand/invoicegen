@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  invoicegen:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      # Persist the SQLite database across container restarts
+      - invoicegen_data:/data
+      # Mount your secrets.toml (do NOT commit this file)
+      - ./.streamlit/secrets.toml:/app/.streamlit/secrets.toml:ro
+    environment:
+      - DB_PATH=/data/invoicegen.db
+    restart: unless-stopped
+
+volumes:
+  invoicegen_data:

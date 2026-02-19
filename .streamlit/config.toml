@@ -1,0 +1,13 @@
+[server]
+# Allow connections from any host (needed inside Docker / behind a reverse proxy)
+headless = true
+enableCORS = false
+enableXsrfProtection = true
+
+[browser]
+# Shown in the browser tab
+serverAddress = "0.0.0.0"
+
+[theme]
+base = "light"
+primaryColor = "#1a73e8"
