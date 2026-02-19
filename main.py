@@ -77,27 +77,17 @@ def dev_load_defaults(invoice_data):
 
 def add_thousand_separator(number_str):
     try:
-        # Convert the string to a float or int
         number = int(number_str)
-
-        # Format it with thousand and lakh separators
-        #formatted_number = "{:,.2f}".format(number) if '.' in number_str else "{:,.0f}".format(number)
-        Cr = int(number // 10000000)
-        Lakh = int(number // 100000)
-        Thousand = int(number % 100000) // 1000
-        Rupees = str(number_str[-3:])
-
-        formatted_amt = ""
-        if Cr > 0:
-            formatted_amt += str(Cr) + ","
-        if Lakh > 0:
-            formatted_amt += str(Lakh) + ","
-        if Thousand > 0:
-            formatted_amt += str(Thousand) + ","
-        formatted_amt+=Rupees
-        return formatted_amt
+        s = str(abs(number))
+        if len(s) <= 3:
+            return s
+        result = s[-3:]
+        s = s[:-3]
+        while s:
+            result = s[-2:] + "," + result
+            s = s[:-2]
+        return result
     except ValueError:
-        # Handle invalid input gracefully
         return "Invalid Input"
 
 
@@ -254,7 +244,7 @@ def generate_pdf(invoice_data):
     table_data.append(["SGST", "", "", "","", add_thousand_separator(str(sgst))])
     table_data.append(["Grand Total", "", "", "", "", add_thousand_separator(str(grand_total))])
 
-    table = Table(table_data, colWidths=[30, 220, 30, 30, 50, 80, 80])
+    table = Table(table_data, colWidths=[40, 230, 50, 50, 70, 90])
     table.setStyle(TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.grey),
                                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
                                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
@@ -449,7 +439,7 @@ def main():
             "order_date": order_date,
             "cgst_rate": cgst_rate,
             "sgst_rate": sgst_rate,
-            "user_data": user_data
+            "user_data": [{k: v for k, v in row.items() if k != "Delete"} for row in user_data]
         }
         #st.write(invoice_data)
         #invoice_data = dev_load_defaults(invoice_data)
@@ -460,7 +450,8 @@ def main():
                 pdf_data = pdf_file.read()
                 pdf_base64 = base64.b64encode(pdf_data).decode()
             st.markdown(
-                f'<a href="data:application/pdf;base64,{pdf_base64}" download="'.format(pdf_filename)+'">Download</a>',unsafe_allow_html=True)
+                f'<a href="data:application/pdf;base64,{pdf_base64}" download="{pdf_filename}">Download Invoice</a>',
+                unsafe_allow_html=True)
         else:
             st.error("Please fill in all fields before generating the PDF.")
 
