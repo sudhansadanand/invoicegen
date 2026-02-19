@@ -329,8 +329,10 @@ def delete_data(data, name_to_delete):
 
 
 def main():
+    st.set_page_config(page_title="BillThis – GST Invoice Generator", page_icon="🧾", layout="centered")
     st.markdown("""
-        <h1 style='text-align: center;'>Invoice Maker</h1>
+        <h1 style='text-align: center;'>🧾 BillThis</h1>
+        <p style='text-align: center; color: #6366f1; margin-top: -12px; font-size: 1rem;'>Free GST Invoice Generator for Indian Businesses</p>
     """, unsafe_allow_html=True)
 
     user_from_data = initialize_from_data()
