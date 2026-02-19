@@ -33,4 +33,5 @@ def send_email(pdf_filename, recipient_email):
         server.quit()
 
 
-send_email("2345__31-01-2024.pdf","sudhansadanand@gmail.com")
+if __name__ == "__main__":
+    send_email("2345__31-01-2024.pdf", "sudhansadanand@gmail.com")
